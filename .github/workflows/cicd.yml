@@ -26,7 +26,7 @@ jobs:
           sudo systemctl start mysql
           sudo systemctl enable mysql
 
-      - name: Create MySQL Database (Optional if already created)
+      - name: Create MySQL User & DB
         run: |
           sudo mysql -e "CREATE DATABASE IF NOT EXISTS laravel_db;"
           sudo mysql -e "CREATE USER IF NOT EXISTS 'laravel_user'@'localhost' IDENTIFIED BY 'your_secure_password';"
