@@ -44,6 +44,12 @@ jobs:
           sed -i 's/DB_USERNAME=.*/DB_USERNAME=laravel_user/' .env
           sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=StrongPassword123/' .env
 
+      - name: Generate Sessions Table Migration
+        run: php artisan session:table
+
+      - name: Run Migrations
+        run: php artisan migrate --force
+
       - name: Install Laravel Dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
