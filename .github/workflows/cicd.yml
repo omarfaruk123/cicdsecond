@@ -29,14 +29,15 @@ jobs:
           sudo systemctl start apache2
           sudo systemctl enable apache2
 
-      - name: Create MySQL Database and User
+      - name: Create MySQL Database and User (forced reset)
         run: |
+          sudo mysql -e "DROP USER IF EXISTS 'laravel_user'@'localhost';"
           sudo mysql -e "CREATE DATABASE IF NOT EXISTS cicdsecondapp;"
-          sudo mysql -e "CREATE USER IF NOT EXISTS 'laravel_user'@'localhost' IDENTIFIED BY 'StrongPassword123';"
+          sudo mysql -e "CREATE USER 'laravel_user'@'localhost' IDENTIFIED WITH mysql_native_password BY 'StrongPassword123';"
           sudo mysql -e "GRANT ALL PRIVILEGES ON cicdsecondapp.* TO 'laravel_user'@'localhost';"
           sudo mysql -e "FLUSH PRIVILEGES;"
 
-      - name: Setup Laravel Environment File
+      - name: Setup Laravel .env File
         run: |
           cp .env.example .env || true
           sed -i 's/DB_DATABASE=.*/DB_DATABASE=cicdsecondapp/' .env
@@ -54,18 +55,12 @@ jobs:
           php artisan route:cache
           php artisan view:cache
 
-      - name: Run Migrations
-        run: php artisan migrate --force
-
       - name: Set Permissions
         run: |
           sudo chown -R $USER:www-data .
           sudo chmod -R 775 storage
           sudo chmod -R 775 bootstrap/cache
 
-      - name: Restart Apache
-        run: sudo systemctl restart apache2
-
-      # Optional: Run PHP built-in server instead of Apache (dev only)
-      - name: Start Laravel Dev Server
-        run: nohup php artisan serve --host=0.0.0.0 --port=8000 &
+      - name: Start Laravel Dev Server (php artisan serve)
+        run: |
+          nohup php artisan serve --host=0.0.0.0 --port=8000 &
