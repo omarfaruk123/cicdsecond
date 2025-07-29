@@ -10,7 +10,7 @@ on:
 
 jobs:
   apply_cicd_process:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - name: Need checkout
+      - name: Need to checkout
         uses: actions/checkout@v3
