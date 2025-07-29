@@ -1,0 +1,18 @@
+name: CICD Apply
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  Apply CICD Process:
+    run-on: ubuntu-latest
+    steps:
+      - name: Need checkout
+        uses: action/checkout@v2
